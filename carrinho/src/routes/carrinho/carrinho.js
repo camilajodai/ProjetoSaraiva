@@ -11,7 +11,7 @@ route_carrinho.get("/listar", (req, res) => {
     })
 })
 
-route_carrinho.post("/adicionar", (req,res) => {
+route_carrinho.post("/adicionar", (req, res) => {
     data.query("insert into carrinho set ?", req.body, (error, result) => {
         if (error) {
             return res.status(500).send({ msg: "Erro ao tentar adicionar no carrinho." })
@@ -33,5 +33,15 @@ route_carrinho.get("/listar/:id", (req, res) => {
         res.status(200).send({ msg: "Ok", payload: dados })
     })
 })
+
+route_carrinho.get("/pagar/:id", (req, res) => {
+    data.query(`select sum(total) as "subtotal" from carrinho where idusuario=?`, req.params.id, (error, dados) => {
+        if (error) {
+            return res.status(500).send({ msg: "Erro ao somar os produtos" })
+        }
+        res.status(200).send({ msg: "Ok", payload: dados })
+    })
+})
+
 
 module.exports = route_carrinho
